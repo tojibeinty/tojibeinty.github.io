@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة - Bio CV</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #0a2e1a;
+    --green-mid: #1a5c35;
+    --green-bright: #27ae60;
+    --green-light: #52d68a;
+    --gold: #c9a84c;
+    --cream: #f5f0e8;
+    --red: #e74c3c;
+    --sidebar-w: 260px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #071a0f;
+    color: var(--cream);
+    display: flex; min-height: 100vh;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: linear-gradient(180deg, #0a2e1a, #071a0f);
+    border-left: 1px solid rgba(39,174,96,0.2);
+    display: flex; flex-direction: column;
+    position: fixed; top: 0; right: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(39,174,96,0.2);
+    text-align: center;
+  }
+  .sidebar-logo h1 { font-size: 1.2rem; color: var(--gold); }
+  .sidebar-logo p { font-size: 0.75rem; color: rgba(245,240,232,0.4); margin-top: 0.3rem; }
+
+  .sidebar-nav { flex: 1; padding: 1.5rem 1rem; }
+  .nav-section { margin-bottom: 2rem; }
+  .nav-section-title {
+    font-size: 0.7rem; color: rgba(245,240,232,0.3);
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 0 0.5rem; margin-bottom: 0.8rem;
+  }
+
+  .nav-btn {
+    display: flex; align-items: center; gap: 0.8rem;
+    width: 100%; padding: 0.8rem 1rem;
+    background: none; border: none;
+    color: rgba(245,240,232,0.6);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: right;
+  }
+  .nav-btn:hover { background: rgba(39,174,96,0.1); color: var(--green-light); }
+  .nav-btn.active {
+    background: rgba(39,174,96,0.15);
+    color: var(--green-bright);
+    border: 1px solid rgba(39,174,96,0.3);
+  }
+  .nav-btn .icon { font-size: 1.1rem; }
+
+  .sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(39,174,96,0.2);
+  }
+  .back-btn {
+    display: block;
+    text-align: center;
+    padding: 0.7rem;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 10px;
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .back-btn:hover { background: rgba(201,168,76,0.2); }
+
+  /* ===== MAIN ===== */
+  .main {
+    flex: 1;
+    margin-right: var(--sidebar-w);
+    padding: 2rem;
+    max-width: calc(100vw - var(--sidebar-w));
+  }
+
+  /* ===== TABS ===== */
+  .tab { display: none; }
+  .tab.active { display: block; }
+
+  /* ===== PAGE HEADER ===== */
+  .page-header {
+    margin-bottom: 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .page-header h2 {
+    font-size: 1.8rem;
+    color: var(--cream);
+  }
+  .page-header h2 span { color: var(--gold); }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(39,174,96,0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .card-title {
+    font-size: 1rem; font-weight: 700;
+    color: var(--green-light);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(39,174,96,0.15);
+  }
+
+  /* ===== FORMS ===== */
+  .form-row { margin-bottom: 1rem; }
+  .form-row label {
+    display: block;
+    font-size: 0.85rem; color: rgba(245,240,232,0.6);
+    margin-bottom: 0.4rem;
+  }
+  .form-row input, .form-row textarea, .form-row select {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(39,174,96,0.25);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    color: var(--cream);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    transition: border 0.2s;
+  }
+  .form-row input:focus, .form-row textarea:focus {
+    outline: none;
+    border-color: var(--green-bright);
+  }
+  .form-row textarea { min-height: 120px; resize: vertical; }
+  .form-row input[type="file"] { padding: 0.5rem; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-green {
+    background: linear-gradient(135deg, var(--green-bright), var(--green-mid));
+    color: white;
+  }
+  .btn-green:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-gold {
+    background: rgba(201,168,76,0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+  .btn-gold:hover { background: rgba(201,168,76,0.25); }
+  .btn-red {
+    background: rgba(231,76,60,0.15);
+    border: 1px solid var(--red);
+    color: var(--red);
+    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
+  }
+  .btn-red:hover { background: rgba(231,76,60,0.25); }
+  .btn-sm { font-size: 0.8rem; padding: 0.4rem 1rem; }
+
+  /* ===== ITEMS LIST ===== */
+  .items-list { display: flex; flex-direction: column; gap: 1rem; }
+  .item-row {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(39,174,96,0.15);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .item-thumb {
+    width: 70px; height: 55px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: rgba(39,174,96,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+  }
+  .item-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-info h4 { font-size: 0.95rem; color: var(--cream); margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-info p { font-size: 0.8rem; color: rgba(245,240,232,0.4); }
+  .item-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    background: var(--green-mid);
+    border: 1px solid var(--green-bright);
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  /* ===== IMAGE PREVIEW ===== */
+  .img-preview {
+    max-width: 200px; max-height: 150px;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  /* ===== BOT CONFIG ===== */
+  .bot-status {
+    display: flex; align-items: center; gap: 1rem;
+    background: rgba(0,136,204,0.1);
+    border: 1px solid rgba(0,136,204,0.3);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .bot-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.2);
+    flex-shrink: 0;
+  }
+  .bot-dot.on { background: var(--green-bright); box-shadow: 0 0 0 3px rgba(39,174,96,0.2); }
+
+  .commands-list {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.85rem;
+    line-height: 2;
+    color: rgba(245,240,232,0.7);
+  }
+  .commands-list code {
+    background: rgba(39,174,96,0.15);
+    border: 1px solid rgba(39,174,96,0.2);
+    padding: 0.15rem 0.5rem;
+    border-radius: 5px;
+    color: var(--green-light);
+    font-family: monospace;
+  }
+
+  /* ===== OVERVIEW STATS ===== */
+  .overview-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .overview-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(39,174,96,0.2);
+    border-radius: 14px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .overview-card .ov-num { font-size: 2.5rem; color: var(--green-light); font-weight: 700; }
+  .overview-card .ov-label { font-size: 0.85rem; color: rgba(245,240,232,0.5); }
+  .overview-card .ov-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-right: 0; max-width: 100vw; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>⚙️ لوحة الإدارة</h1>
+    <p>Bio CV Dashboard</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-title">الرئيسية</div>
+      <button class="nav-btn active" onclick="showTab('overview')"><span class="icon">📊</span> نظرة عامة</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">المحتوى</div>
+      <button class="nav-btn" onclick="showTab('cases')"><span class="icon">🔬</span> الحالات</button>
+      <button class="nav-btn" onclick="showTab('videos')"><span class="icon">🎬</span> الفيديوهات</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">الإعدادات</div>
+      <button class="nav-btn" onclick="showTab('profile')"><span class="icon">👤</span> الملف الشخصي</button>
+      <button class="nav-btn" onclick="showTab('bot')"><span class="icon">🤖</span> بوت تلغرام</button>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="index.html" class="back-btn">← العودة للموقع</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- OVERVIEW -->
+  <div class="tab active" id="tab-overview">
+    <div class="page-header">
+      <h2>نظرة <span>عامة</span></h2>
+    </div>
+    <div class="overview-grid">
+      <div class="overview-card">
+        <div class="ov-icon">🔬</div>
+        <div class="ov-num" id="ovCases">0</div>
+        <div class="ov-label">حالة موثقة</div>
+      </div>
+      <div class="overview-card">
+        <div class="ov-icon">🎬</div>
+        <div class="ov-num" id="ovVideos">0</div>
+        <div class="ov-label">فيديو تعليمي</div>
+      </div>
+      <div class="overview-card">
+        <div class="ov-icon">⚗️</div>
+        <div class="ov-num" id="ovSkills">0</div>
+        <div class="ov-label">مهارة</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚡ إجراءات سريعة</div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <button class="btn btn-green" onclick="showTab('cases')">➕ إضافة حالة</button>
+        <button class="btn btn-gold" onclick="showTab('videos')">🎬 إضافة فيديو</button>
+        <button class="btn btn-green btn-sm" onclick="showTab('profile')">✏️ تعديل الملف</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASES -->
+  <div class="tab" id="tab-cases">
+    <div class="page-header">
+      <h2>إدارة <span>الحالات</span></h2>
+    </div>
+
+    <!-- Add Case Form -->
+    <div class="card">
+      <div class="card-title">➕ إضافة حالة جديدة</div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>عنوان الحالة *</label>
+          <input type="text" id="caseTitle" placeholder="مثال: حالة التهاب رئوي نادر">
+        </div>
+        <div class="form-row">
+          <label>التصنيف</label>
+          <input type="text" id="caseCat" placeholder="مثال: أمراض باكتيرية">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>الشرح التفصيلي *</label>
+        <textarea id="caseDesc" placeholder="اكتب الشرح التفصيلي للحالة..."></textarea>
+      </div>
+      <div class="form-row">
+        <label>صورة الحالة</label>
+        <input type="file" id="caseImg" accept="image/*" onchange="previewImg(this,'caseImgPreview')">
+        <img id="caseImgPreview" class="img-preview">
+      </div>
+      <button class="btn btn-green" onclick="addCase()">✅ إضافة الحالة</button>
+    </div>
+
+    <!-- Cases List -->
+    <div class="card">
+      <div class="card-title">📋 الحالات الموجودة</div>
+      <div class="items-list" id="casesList"></div>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <div class="tab" id="tab-videos">
+    <div class="page-header">
+      <h2>إدارة <span>الفيديوهات</span></h2>
+    </div>
+
+    <!-- Add Video Form -->
+    <div class="card">
+      <div class="card-title">➕ إضافة فيديو جديد</div>
+      <div class="form-row">
+        <label>عنوان الفيديو *</label>
+        <input type="text" id="videoTitle" placeholder="عنوان الفيديو">
+      </div>
+      <div class="form-row">
+        <label>رابط الفيديو * (يوتيوب أو رابط مباشر)</label>
+        <input type="url" id="videoUrl" placeholder="https://youtube.com/watch?v=...">
+      </div>
+      <div class="form-row">
+        <label>وصف الفيديو</label>
+        <textarea id="videoDesc" placeholder="وصف مختصر للفيديو..." style="min-height:80px"></textarea>
+      </div>
+      <button class="btn btn-green" onclick="addVideo()">✅ إضافة الفيديو</button>
+    </div>
+
+    <!-- Videos List -->
+    <div class="card">
+      <div class="card-title">🎬 الفيديوهات الموجودة</div>
+      <div class="items-list" id="videosList"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="tab" id="tab-profile">
+    <div class="page-header">
+      <h2>الملف <span>الشخصي</span></h2>
+    </div>
+    <div class="card">
+      <div class="card-title">👤 معلوماتك الشخصية</div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>الاسم الكامل</label>
+          <input type="text" id="profName" placeholder="د. محمد الأحمد">
+        </div>
+        <div class="form-row">
+          <label>التخصص / المسمى الوظيفي</label>
+          <input type="text" id="profTitle" placeholder="متخصص في علم الأحياء الجزيئي">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>نبذة شخصية</label>
+        <textarea id="profBio" placeholder="اكتب نبذة عن نفسك..."></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>معرف تلغرام</label>
+          <input type="text" id="profTg" placeholder="@yourusername">
+        </div>
+        <div class="form-row">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="profEmail" placeholder="email@example.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>رابط البوت</label>
+        <input type="url" id="profBot" placeholder="https://t.me/YourBot">
+      </div>
+      <div class="form-row">
+        <label>صورة البروفايل (رابط أو رفع)</label>
+        <input type="url" id="profAvatar" placeholder="https://...">
+      </div>
+      <button class="btn btn-green" onclick="saveProfile()">💾 حفظ التغييرات</button>
+    </div>
+  </div>
+
+  <!-- BOT CONFIG -->
+  <div class="tab" id="tab-bot">
+    <div class="page-header">
+      <h2>بوت <span>تلغرام</span></h2>
+    </div>
+
+    <div class="bot-status">
+      <div class="bot-dot on" id="botDot"></div>
+      <div>
+        <div style="font-weight:700">حالة البوت</div>
+        <div style="font-size:0.8rem;color:rgba(245,240,232,0.5)">جاهز للإعداد</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔑 إعدادات البوت</div>
+      <div class="form-row">
+        <label>توكن البوت (من @BotFather)</label>
+        <input type="text" id="botToken" placeholder="1234567890:ABCdefGHI...">
+      </div>
+      <div class="form-row">
+        <label>معرف الأدمن (Chat ID)</label>
+        <input type="text" id="botAdminId" placeholder="123456789">
+      </div>
+      <button class="btn btn-green" onclick="saveBot()">💾 حفظ إعدادات البوت</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📖 أوامر البوت</div>
+      <p style="font-size:0.85rem;color:rgba(245,240,232,0.5);margin-bottom:1rem">بعد إعداد البوت، يمكنك استخدام هذه الأوامر في تلغرام:</p>
+      <div class="commands-list">
+        <div><code>/addcase</code> — إضافة حالة جديدة (الصورة + الوصف)</div>
+        <div><code>/addvideo</code> — إضافة فيديو جديد (الرابط + العنوان)</div>
+        <div><code>/listcases</code> — عرض قائمة الحالات</div>
+        <div><code>/listvideos</code> — عرض قائمة الفيديوهات</div>
+        <div><code>/deletecase [رقم]</code> — حذف حالة</div>
+        <div><code>/deletevideo [رقم]</code> — حذف فيديو</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🚀 كيفية تشغيل البوت</div>
+      <div style="font-size:0.85rem;line-height:2;color:rgba(245,240,232,0.7)">
+        <p>1. اذهب إلى @BotFather في تلغرام</p>
+        <p>2. أرسل /newbot وأعطه اسماً</p>
+        <p>3. انسخ التوكن وضعه أعلاه</p>
+        <p>4. احصل على Chat ID الخاص بك من @userinfobot</p>
+        <p>5. شغّل ملف <code>bot.js</code> على سيرفرك</p>
+        <p>6. كل ما تضيفه عبر البوت سيظهر على موقعك تلقائياً 🎉</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+function getData() {
+  const d = localStorage.getItem('bioCV');
+  if (!d) return { profile:{name:'',title:'',bio:'',telegram:'',email:'',botLink:'',avatar:''}, skills:[], cases:[], videos:[], bot:{token:'',adminId:''} };
+  return JSON.parse(d);
+}
+function saveData(data) {
+  localStorage.setItem('bioCV', JSON.stringify(data));
+}
+
+// ===== TABS =====
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget && event.currentTarget.classList.add('active');
+  loadTab(name);
+}
+
+function loadTab(name) {
+  if (name === 'overview') loadOverview();
+  if (name === 'cases') loadCases();
+  if (name === 'videos') loadVideos();
+  if (name === 'profile') loadProfile();
+  if (name === 'bot') loadBot();
+}
+
+// ===== OVERVIEW =====
+function loadOverview() {
+  const d = getData();
+  document.getElementById('ovCases').textContent = d.cases.length;
+  document.getElementById('ovVideos').textContent = d.videos.length;
+  document.getElementById('ovSkills').textContent = (d.skills||[]).length;
+}
+
+// ===== CASES =====
+function addCase() {
+  const title = document.getElementById('caseTitle').value.trim();
+  const desc = document.getElementById('caseDesc').value.trim();
+  const cat = document.getElementById('caseCat').value.trim();
+  if (!title || !desc) return toast('⚠️ العنوان والشرح مطلوبان');
+
+  const file = document.getElementById('caseImg').files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      pushCase({ title, description: desc, category: cat, image: e.target.result });
+    };
+    reader.readAsDataURL(file);
+  } else {
+    pushCase({ title, description: desc, category: cat, image: '' });
+  }
+}
+
+function pushCase(c) {
+  const d = getData();
+  d.cases.push(c);
+  saveData(d);
+  loadCases();
+  document.getElementById('caseTitle').value = '';
+  document.getElementById('caseDesc').value = '';
+  document.getElementById('caseCat').value = '';
+  document.getElementById('caseImg').value = '';
+  document.getElementById('caseImgPreview').style.display = 'none';
+  toast('✅ تمت إضافة الحالة بنجاح');
+}
+
+function deleteCase(i) {
+  if (!confirm('هل تريد حذف هذه الحالة؟')) return;
+  const d = getData();
+  d.cases.splice(i, 1);
+  saveData(d);
+  loadCases();
+  toast('🗑️ تم حذف الحالة');
+}
+
+function loadCases() {
+  const d = getData();
+  const el = document.getElementById('casesList');
+  if (!d.cases.length) {
+    el.innerHTML = '<p style="color:rgba(245,240,232,0.3);text-align:center;padding:2rem">لا توجد حالات بعد</p>';
+    return;
+  }
+  el.innerHTML = d.cases.map((c, i) => `
+    <div class="item-row">
+      <div class="item-thumb">
+        ${c.image ? `<img src="${c.image}" alt="">` : '🔬'}
+      </div>
+      <div class="item-info">
+        <h4>${c.title}</h4>
+        <p>${c.category || 'غير مصنف'} • ${c.description.slice(0,60)}...</p>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-red" onclick="deleteCase(${i})">🗑️ حذف</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== VIDEOS =====
+function addVideo() {
+  const title = document.getElementById('videoTitle').value.trim();
+  const url = document.getElementById('videoUrl').value.trim();
+  const desc = document.getElementById('videoDesc').value.trim();
+  if (!title || !url) return toast('⚠️ العنوان والرابط مطلوبان');
+
+  const d = getData();
+  d.videos.push({ title, url, description: desc });
+  saveData(d);
+  loadVideos();
+  document.getElementById('videoTitle').value = '';
+  document.getElementById('videoUrl').value = '';
+  document.getElementById('videoDesc').value = '';
+  toast('✅ تمت إضافة الفيديو بنجاح');
+}
+
+function deleteVideo(i) {
+  if (!confirm('هل تريد حذف هذا الفيديو؟')) return;
+  const d = getData();
+  d.videos.splice(i, 1);
+  saveData(d);
+  loadVideos();
+  toast('🗑️ تم حذف الفيديو');
+}
+
+function loadVideos() {
+  const d = getData();
+  const el = document.getElementById('videosList');
+  if (!d.videos.length) {
+    el.innerHTML = '<p style="color:rgba(245,240,232,0.3);text-align:center;padding:2rem">لا توجد فيديوهات بعد</p>';
+    return;
+  }
+  el.innerHTML = d.videos.map((v, i) => `
+    <div class="item-row">
+      <div class="item-thumb">🎬</div>
+      <div class="item-info">
+        <h4>${v.title}</h4>
+        <p>${v.url}</p>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-red" onclick="deleteVideo(${i})">🗑️ حذف</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== PROFILE =====
+function loadProfile() {
+  const { profile } = getData();
+  document.getElementById('profName').value = profile.name || '';
+  document.getElementById('profTitle').value = profile.title || '';
+  document.getElementById('profBio').value = profile.bio || '';
+  document.getElementById('profTg').value = profile.telegram || '';
+  document.getElementById('profEmail').value = profile.email || '';
+  document.getElementById('profBot').value = profile.botLink || '';
+  document.getElementById('profAvatar').value = profile.avatar || '';
+}
+function saveProfile() {
+  const d = getData();
+  d.profile = {
+    name: document.getElementById('profName').value,
+    title: document.getElementById('profTitle').value,
+    bio: document.getElementById('profBio').value,
+    telegram: document.getElementById('profTg').value,
+    email: document.getElementById('profEmail').value,
+    botLink: document.getElementById('profBot').value,
+    avatar: document.getElementById('profAvatar').value,
+  };
+  saveData(d);
+  toast('✅ تم حفظ الملف الشخصي');
+}
+
+// ===== BOT =====
+function loadBot() {
+  const d = getData();
+  if (d.bot) {
+    document.getElementById('botToken').value = d.bot.token || '';
+    document.getElementById('botAdminId').value = d.bot.adminId || '';
+  }
+}
+function saveBot() {
+  const d = getData();
+  d.bot = {
+    token: document.getElementById('botToken').value,
+    adminId: document.getElementById('botAdminId').value,
+  };
+  saveData(d);
+  toast('✅ تم حفظ إعدادات البوت');
+}
+
+// ===== HELPERS =====
+function previewImg(input, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const el = document.getElementById(previewId);
+    el.src = e.target.result;
+    el.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ===== INIT =====
+loadOverview();
+</script>
+</body>
+</html>
