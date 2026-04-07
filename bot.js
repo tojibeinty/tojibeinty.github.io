@@ -12,8 +12,8 @@ const fs = require('fs');
 const path = require('path');
 
 // ===== الإعدادات =====
-const TOKEN = 'ضع_توكن_البوت_هنا';        // من @BotFather
-const ADMIN_ID = 123456789;                 // Chat ID الخاص بك
+const TOKEN = '6360843107:AAGY9RFyrfynrzR4-7Uj9iVh8vPDgCAjg9g';        //  @BotFather
+const ADMIN_ID = 6263195701;                 // Chat ID الخاص بك
 const DATA_FILE = path.join(__dirname, 'data.json');
 
 // ===== تحميل/حفظ البيانات =====
